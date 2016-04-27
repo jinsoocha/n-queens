@@ -6,14 +6,19 @@ describe('Board', function() {
 
 
   var verifyConflictTypes = function(expectedConflicts, matrix) {
+
     // The Board() constructor will accept a matrix and build that into a (Backbone) Board object (as defined in Board.js)
     var board = new Board(matrix);
+
     _.map('row col rooks majorDiagonal minorDiagonal queens'.split(' '), function(conflictType) {
       var conflictDetected = board['hasAny' + capitalize(conflictType) + 'Conflicts']();
       var conflictExpected = _(expectedConflicts).contains(conflictType);
       var message = conflictExpected ? 'should' : 'should not';
 
       it(message + ' find a ' + conflictType + ' conflict', function() {
+        if(conflictDetected !== conflictExpected) {
+          console.log(JSON.stringify(board))
+        }
         expect(conflictDetected).to.be.equal(conflictExpected);
       });
     });
