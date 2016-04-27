@@ -11,17 +11,54 @@
 // take a look at solversSpec.js to see what the tests are expecting
 
 
-// return a matrix (an array of arrays) representing a single nxn chessboard, with n rooks placed such that none of them can attack each other
-
-
+// return a matrix (an array of arrays) representing a single nxn chessboard, 
+//with n rooks placed such that none of them can attack each other
 
 window.findNRooksSolution = function(n) {
-  var solution = undefined; //fixme
+  var solution = []; //fixme
 
-  console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
-  return solution;
+  var inputs = [0, 1];
+
+  var generateRows = function(count, row) {
+    row = row || [];
+
+    if (count === 0) {
+      solution.push(row);
+      return;
+    }
+
+    for (var i = 0; i < inputs.length; i++) {
+      var currentPosition = inputs[i];
+      generateRows(count - 1, row.concat(currentPosition));
+    }
+  };
+
+  generateRows(n);
+  console.log("solution",JSON.stringify(solution))
+
+  var boards = [];
+
+  var generateSolutions = function(count, board) {
+    board = board || [];
+
+    if (count === 0) {
+      boards.push(board);
+      return;
+    }
+
+    for (var i = 0; i < solution.length; i++) {
+      var currentPosition = solution[i];
+      var boarded = [];
+      boarded.push(currentPosition);
+      generateSolutions(count - 1, board.concat(boarded));
+    }
+  };
+
+  generateSolutions(n);
+  
+  console.log('Single solution for ' + n + ' rooks:', JSON.stringify(boards));
+  return boards;
 };
-
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
 window.countNRooksSolutions = function(n) {
   var solutionCount = undefined; //fixme
