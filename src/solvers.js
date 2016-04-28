@@ -76,35 +76,47 @@ window.countNRooksSolutions = function(n) {
 
   var boards = [];
 
-  var generateSolutions = function(count, board) {
+  var generateSolutions = function(count, board, pieces) {
     board = board || [];
-
+    pieces = pieces || 0;
+    
     if (count === 0) {
-      boards.push(board);
+      if(board.pieces === n) {
+        console.log("board pushing to boards",JSON.stringify(board))
+        boards.push(board);
+      }  
       return;
     }
+    
 
     for (var i = 0; i < solution.length; i++) {
       var currentPosition = solution[i];
       var newBoard = board.slice();
+      console.log("row pieces",JSON.stringify(currentPosition), currentPosition.pieces)
       newBoard.push(currentPosition);
-      board.pieces = board.pieces || 0;
-      board.pieces += currentPosition.pieces;
-      newBoard.pieces = board.pieces;
-      generateSolutions(count - 1, newBoard);
+      console.log("row pushing to board",JSON.stringify(newBoard))
+      newBoard.pieces = pieces || 0;
+      newBoard.pieces += currentPosition.pieces;
+      console.log("board pieces",newBoard.pieces)
+
+      generateSolutions(count - 1, newBoard, newBoard.pieces);
     }
   };
 
   generateSolutions(n);
 
-  var solutionCount = boards.length; //fixme
-  for(var i = 0; i < solutionCount; i++) {
-    var testBoard = new Board(boards[i]);
-    console.log(boards[i].pieces);
-  }
+    console.log("n number of rooks arrangements",JSON.stringify(boards))
+    //now we have to find the ones that pass the test 
 
-  console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
-  return solutionCount;
+    
+  // var solutionCount = boards.length; //fixme
+  // for(var i = 0; i < solutionCount; i++) {
+  //   var testBoard = new Board(boards[i]);
+  //   console.log(boards[i].pieces);
+  // }
+
+  // console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
+  // return solutionCount;
 };
 
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n queens placed such that none of them can attack each other
