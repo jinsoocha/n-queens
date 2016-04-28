@@ -54,7 +54,10 @@ window.countNRooksSolutions = function(n) {
     row = row || [];
 
     if (count === 0) {
-      solution.push(row);
+      if(row.pieces < 2) {
+       console.log("pushing row without conflicts only",JSON.stringify(row),row.pieces);
+        solution.push(row);
+      }
       return;
     }
 
@@ -73,7 +76,6 @@ window.countNRooksSolutions = function(n) {
   generateRows(n);
 
 
-
   var boards = [];
 
   var generateSolutions = function(count, board, pieces) {
@@ -82,12 +84,14 @@ window.countNRooksSolutions = function(n) {
     
     if (count === 0) {
       if(board.pieces === n) {
-        console.log("board pushing to boards",JSON.stringify(board))
-        boards.push(board);
+        var testBoard = new Board(board);
+        if(!testBoard.hasAnyColConflicts()) {
+          console.log("no conflict board pushing to boards",JSON.stringify(board))
+          boards.push(board);
+        }
       }  
       return;
-    }
-    
+    }    
 
     for (var i = 0; i < solution.length; i++) {
       var currentPosition = solution[i];
@@ -98,24 +102,31 @@ window.countNRooksSolutions = function(n) {
       newBoard.pieces = pieces || 0;
       newBoard.pieces += currentPosition.pieces;
       console.log("board pieces",newBoard.pieces)
-
+      
       generateSolutions(count - 1, newBoard, newBoard.pieces);
     }
   };
 
   generateSolutions(n);
 
-    console.log("n number of rooks arrangements",JSON.stringify(boards))
+    console.log("n number of rooks arrangements",JSON.stringify(boards.length));
+    return boards.length;
     //now we have to find the ones that pass the test 
 
-    
-  // var solutionCount = boards.length; //fixme
-  // for(var i = 0; i < solutionCount; i++) {
-  //   var testBoard = new Board(boards[i]);
-  //   console.log(boards[i].pieces);
-  // }
+  // var counter = 0;
 
-  // console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
+  // for(var i = 0; i < boards.length; i++) {
+  //   var testBoard = new Board(boards[i]);
+  //   console.log(JSON.stringify(boards[i]));
+  //   console.log(testBoard.hasAnyRooksConflicts())
+  //   if(!testBoard.hasAnyRooksConflicts()) {
+  //     counter++;
+  //   }
+  // }
+  // console.log('Number of solutions for ' + n + ' rooks:', counter);
+
+  // return counter;
+
   // return solutionCount;
 };
 
