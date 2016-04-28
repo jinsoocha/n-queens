@@ -15,8 +15,33 @@
 //with n rooks placed such that none of them can attack each other
 
 window.findNRooksSolution = function(n) {
-  console.log('Single solution for ' + n + ' rooks:', JSON.stringify('something'));
+  var board = [];
+  for(var row = 0; row < n; row++) {
+    board.push([]);
+    for(var col = 0; col < n; col++) {
+      // push 0 to everything
+      board[row][col] = 0;
+    }
+  }
+  
+  var placeRooks = function(row,col) { 
+    if(row > n-1 || col > n-1) {
+      return;
+    }
+    board[row][col] = 1;
+    placeRooks(row+1,col+2);
+  };
 
+  if(n % 2 === 0) {
+    placeRooks(0, 1);
+    placeRooks(n / 2, 0);
+  } else {
+    placeRooks(0,0);
+    placeRooks(Math.ceil(n / 2), 1);
+  }
+
+  console.log('Single solution for ' + n + ' rooks:', JSON.stringify(board));
+  return board;
 };
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
 window.countNRooksSolutions = function(n) {
@@ -34,13 +59,20 @@ window.countNRooksSolutions = function(n) {
     }
 
     for (var i = 0; i < inputs.length; i++) {
-      generateRows(count - 1, row.concat(i));
+      row["pieces"] = row["pieces"] || 0;
+      if(i === 1) {
+        row["pieces"]++;
+      }
+      var newRow = row.slice();
+      newRow.push(i);
+      newRow.pieces = row.pieces;
+      generateRows(count - 1, newRow);
     }
   };
 
   generateRows(n);
 
-  console.log("solution:",JSON.stringify(solution))
+
 
   var boards = [];
 
@@ -54,17 +86,22 @@ window.countNRooksSolutions = function(n) {
 
     for (var i = 0; i < solution.length; i++) {
       var currentPosition = solution[i];
-      var set = [];
-      set.push(currentPosition);
-      generateSolutions(count - 1, board.concat(set));
+      var newBoard = board.slice();
+      newBoard.push(currentPosition);
+      board.pieces = board.pieces || 0;
+      board.pieces += currentPosition.pieces;
+      newBoard.pieces = board.pieces;
+      generateSolutions(count - 1, newBoard);
     }
   };
 
   generateSolutions(n);
-  console.log(JSON.stringify(boards))
-// console.log(JSON.stringify(boards[0]))
-  var solutionCount = boards.length; //fixme
 
+  var solutionCount = boards.length; //fixme
+  for(var i = 0; i < solutionCount; i++) {
+    var testBoard = new Board(boards[i]);
+    console.log(boards[i].pieces);
+  }
 
   console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
   return solutionCount;
