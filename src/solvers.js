@@ -15,112 +15,33 @@
 //with n rooks placed such that none of them can attack each other
 
 window.findNRooksSolution = function(n) {
-  var board = [];
-  for(var row = 0; row < n; row++) {
-    board.push([]);
-    for(var col = 0; col < n; col++) {
-      // push 0 to everything
-      board[row][col] = 0;
-    }
-  }
+  // var board = [];
+  // for(var row = 0; row < n; row++) {
+  //   board.push([]);
+  //   for(var col = 0; col < n; col++) {
+  //     // push 0 to everything
+  //     board[row][col] = 0;
+  //   }
+  // }
   
-  var placeRooks = function(row,col) { 
-    if(row > n-1 || col > n-1) {
-      return;
-    }
-    board[row][col] = 1;
-    placeRooks(row+1,col+2);
-  };
+  // var placeRooks = function(row,col) { 
+  //   if(row > n-1 || col > n-1) {
+  //     return;
+  //   }
+  //   board[row][col] = 1;
+  //   placeRooks(row+1,col+2);
+  // };
 
-  if(n % 2 === 0) {
-    placeRooks(0, 1);
-    placeRooks(n / 2, 0);
-  } else {
-    placeRooks(0,0);
-    placeRooks(Math.ceil(n / 2), 1);
-  }
+  // if(n % 2 === 0) {
+  //   placeRooks(0, 1);
+  //   placeRooks(n / 2, 0);
+  // } else {
+  //   placeRooks(0,0);
+  //   placeRooks(Math.ceil(n / 2), 1);
+  // }
 
-  console.log('Single solution for ' + n + ' rooks:', JSON.stringify(board));
-  return board;
-};
-// return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
-// window.countNRooksSolutions = function(n) {
-
-//   var solution = []; //fixme
-
-//   var inputs = [0, 1];
-
-//   var generateRows = function(count, row) {
-//     row = row || [];
-
-//     if (count === 0) {
-//       if(row.pieces < 2) {
-//        // console.log("pushing row without conflicts only",JSON.stringify(row),row.pieces);
-//         solution.push(row);
-//       }
-//       return;
-//     }
-
-//     for (var i = 0; i < inputs.length; i++) {
-//       row["pieces"] = row["pieces"] || 0;
-//       if(i === 1) {
-//         row["pieces"]++;
-//       }
-//       var newRow = row.slice();
-//       newRow.push(i);
-//       newRow.pieces = row.pieces;
-//       generateRows(count - 1, newRow);
-//     }
-//   };
-
-//   generateRows(n);
-//   console.log("rows",JSON.stringify(solution))
-
-//   var boards = [];
-
-//   var generateSolutions = function(count, board, pieces) {
-//     board = board || [];
-//     pieces = pieces || 0;
-    
-//     if (count === 0) {
-//       if(board.pieces === n) {
-//         var testBoard = new Board(board);
-//         if(!testBoard.hasAnyColConflicts()) {
-//           // console.log("no conflict board pushing to boards",JSON.stringify(board))
-//           boards.push(board);
-//         }
-//       }  
-//       return;
-//     }    
-
-    
-//     for (var i = 0; i < solution.length; i++) {
-//       var currentPosition = solution[i];
-//       var newBoard = board.slice();
-//       // console.log("row pieces",JSON.stringify(currentPosition), currentPosition.pieces)
-//       newBoard.push(currentPosition);
-//       // console.log("making a board",JSON.stringify(newBoard))
-//       newBoard.pieces = pieces || 0;
-//       newBoard.pieces += currentPosition.pieces;
-//       // console.log("board pieces",newBoard.pieces)
-      
-//       generateSolutions(count - 1, newBoard, newBoard.pieces);
-//     }
-
-//   };
-// console.time('looping');
-//   generateSolutions(n);
-//       console.timeEnd('looping');
-//     console.log('looping for', n);
-//     // console.log("final board",JSON.stringify(boards))
-//     // console.log("n number of rooks arrangements",JSON.stringify(boards.length));
-//   return boards.length;
-
-// };
-
-
-window.countNRooksSolutions = function(n) {
-  var boards = [];
+  // console.log('Single solution for ' + n + ' rooks:', JSON.stringify(board));
+  // return board;
 
   var board = [];
   for(var row = 0; row < n; row++) {
@@ -133,11 +54,128 @@ window.countNRooksSolutions = function(n) {
       }
     }
   }
-  console.log(JSON.stringify(board))
   
+  console.log('Single solution for ' + n + ' rooks:', JSON.stringify(board));
 
-  return false;
+  return board;
 };
+// return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
+
+//OUR ORIGINAL SOLUTION THAT TAKES 10 MINUTES.
+
+window.countNRooksSolutions = function(n) {
+  var solutionCount = 0;
+  var solution = []; //fixme
+
+  var inputs = [0, 1];
+
+  var generateRows = function(count, row) {
+    row = row || [];
+
+    if (count === 0) {
+      if(row.pieces < 2) {
+       // console.log("pushing row without conflicts only",JSON.stringify(row),row.pieces);
+        solution.push(row);
+      }
+      return;
+    }
+
+    for (var i = 0; i < inputs.length; i++) {
+      row["pieces"] = row["pieces"] || 0;
+      if(i === 1) {
+        row["pieces"]++;
+      }
+      var newRow = row.slice();
+      newRow.push(i);
+      newRow.pieces = row.pieces;
+      generateRows(count - 1, newRow);
+    }
+  };
+
+  generateRows(n);
+  console.log("rows",JSON.stringify(solution))
+
+  var boards = [];
+
+  var generateSolutions = function(count, board, pieces) {
+    board = board || [];
+    pieces = pieces || 0;
+    
+    if (count === 0) {
+      if(board.pieces === n) {
+        var testBoard = new Board(board);
+        if(!testBoard.hasAnyColConflicts()) {
+          // console.log("no conflict board pushing to boards",JSON.stringify(board))
+          // boards.push(board);
+          solutionCount++;
+        }
+      }  
+      return;
+    }    
+
+    
+    for (var i = 0; i < solution.length; i++) {
+      var currentPosition = solution[i];
+      var newBoard = board.slice();
+      // console.log("row pieces",JSON.stringify(currentPosition), currentPosition.pieces)
+      newBoard.push(currentPosition);
+      // console.log("making a board",JSON.stringify(newBoard))
+      newBoard.pieces = pieces || 0;
+      newBoard.pieces += currentPosition.pieces;
+      // console.log("board pieces",newBoard.pieces)
+      
+      generateSolutions(count - 1, newBoard, newBoard.pieces);
+    }
+
+  };
+console.time('looping');
+  generateSolutions(n);
+      console.timeEnd('looping');
+    console.log('looping for', n);
+    // console.log("final board",JSON.stringify(boards))
+    // console.log("n number of rooks arrangements",JSON.stringify(boards.length));
+  return solutionCount;
+
+};
+
+//THE PROVIDED SOLUTION THAT IS NOT PASSING THE TEST. WHY? IS IT POSSIBLE THAT OUR ROOKSCONFLICT FUNCTION IS WRONG?
+
+// window.countNRooksSolutions = function(n) {
+//   console.log("START",n)
+//   var board = new Board ({n:n});
+//   var solutionCount = 0;
+
+//   var recursive = function(row) {
+
+//     console.log("row",row);
+//     if(row === n) {
+//       solutionCount++; 
+//       return;
+//     }
+    
+
+//     for(col = 0; col < n; col++) {
+//       board.togglePiece(row,col);
+//       console.log("putting 1","row",row,"col",col,JSON.stringify(board));
+//       // if(board.hasAnyRooksConflicts()) {
+//       //   board.togglePiece(row, col);
+//       //   console.log("putting 0 back",JSON.stringify(board));
+//       // } else {
+//       //   recursive(row+1);
+
+//       // }
+//       if(!board.hasAnyRooksConflicts()){
+//         recursive(row+1);
+//       }
+//       board.togglePiece(row, col);
+//     }
+//   };
+
+
+//   recursive(0);
+//   console.log("result",solutionCount,JSON.stringify(board))
+//   return solutionCount;
+// };
 
 
 
@@ -145,6 +183,7 @@ window.countNRooksSolutions = function(n) {
 window.findNQueensSolution = function(n) {
  
   var board = [];
+
   for(var row = 0; row < n; row++) {
     board.push([]);
     for(var col = 0; col < n; col++) {
@@ -163,7 +202,7 @@ window.findNQueensSolution = function(n) {
 
   if(n !== 2 && n !== 3 && n !== 8) {
     if(n % 2 === 0) {
-      console.log(n)
+      // console.log(n)
       placeQueens(0, 1);
       placeQueens(n / 2, 0);
     } else {
@@ -181,6 +220,7 @@ window.findNQueensSolution = function(n) {
 
   console.log('Single solution for ' + n + ' queens:', JSON.stringify(board));
   return board;
+
 };
 
 // return the number of nxn chessboards that exist, with n queens placed such that none of them can attack each other

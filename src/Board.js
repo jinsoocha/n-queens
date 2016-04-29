@@ -92,7 +92,6 @@
 
     // test if any rows on this board contain conflicts
     hasAnyRowConflicts: function() {
-      var result = false;
       for(var i = 0; i < this.get('n'); i++) {
         var counter = 0;
         for(var j = 0; j < this.get(i).length; j++) {
@@ -106,7 +105,7 @@
         
       }
 
-      return result;
+      return false;
 
     },
 
